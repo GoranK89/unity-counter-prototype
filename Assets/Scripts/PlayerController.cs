@@ -4,29 +4,45 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-  private float moveSpeed = 10;
+  private Rigidbody playerRB;
+  private Vector3 moveDirection;
+  private float moveSpeed = 11f;
+  private float maxPosRight = 10f;
+  private float maxPosLeft = 15f;
 
   // Start is called before the first frame update
-  void Start()
+  void Awake()
   {
+    playerRB = GetComponent<Rigidbody>();
 
   }
 
-  // Update is called once per frame
   void Update()
   {
-    movePlayer();
-  }
+    float moveZ = 0f;
 
-  private void movePlayer()
+    if (Input.GetKey(KeyCode.A))
+    {
+      if (transform.position.z >= -maxPosLeft)
+      {
+        moveZ = -1f;
+      }
+
+    }
+    if (Input.GetKey(KeyCode.D))
+    {
+      if (transform.position.z <= maxPosRight)
+      {
+        moveZ = +1f;
+      }
+
+    }
+
+    moveDirection = new Vector3(0, 0, moveZ).normalized;
+  }
+  // Update is called once per frame
+  void FixedUpdate()
   {
-    if (Input.GetKey("a"))
-    {
-      transform.Translate(new Vector3(0f, 0f, 1f) * -moveSpeed * Time.deltaTime);
-    }
-    if (Input.GetKey("d"))
-    {
-      transform.Translate(new Vector3(0f, 0f, 1f) * moveSpeed * Time.deltaTime);
-    }
+    playerRB.velocity = moveDirection * moveSpeed;
   }
 }
